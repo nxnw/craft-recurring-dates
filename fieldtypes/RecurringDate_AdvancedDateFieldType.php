@@ -53,22 +53,29 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		if($repeats){
 			$rule = new Recurr\RecurrenceRule();
 			$rule->setStartDate(new \DateTime($startDate));
+			$rule->setInterval($interval);
+
+			if($ends == 'until'){
+				$rule->setEndDate(new \DateTime($untilDate));
+			}
+			else if($ends == 'after'){
+				$rule->setCount($count);
+			}
 
 			switch ($frequency) {
 				case 'daily':
 						$rule->setFreq(Recurr\RecurrenceRule::FREQ_DAILY);
-						$rule->setInterval($interval);
-						if($ends == 'until'){
-							$rule->setEndDate(new \DateTime($untilDate));
-						}
-						else if($ends == 'after'){
-							$rule->setCount($count);
-						}
 					break;
 
 				case 'weekly':
 						$rule->setFreq(Recurr\RecurrenceRule::FREQ_WEEKLY);
-						$rule->setInterval($interval);
+						if( empty($weekDays) ){
+							//If weekdays empty set monday by default
+							$rule->setByDay(array("MO"));
+						}
+						else{
+							$rule->setByDay($weekDays);
+						}
 					break;
 
 				case 'monthly':

@@ -113,13 +113,13 @@
 	{{ forms.checkboxGroup({
 		name: name~'[on]',
 		options: {
-			'su' : 'S',
-			'm' : 'M',
-			't' : 'T',
-			'w' : 'W',
-			'th' : 'T',
-			'f' : 'F',
-			's' : 'S',
+			'SU' : 'S',
+			'MO' : 'M',
+			'TU' : 'T',
+			'WE' : 'W',
+			'TH' : 'T',
+			'FR' : 'F',
+			'SA' : 'S',
 		}
 	}) }}
 </div>
@@ -147,7 +147,7 @@
 </div>
 <div class="field ends">
 	<div class="heading">
-		<label for="{{ name }}-ends">Repeat Until</label>
+		<label for="{{ name }}-ends">Ends</label>
 	</div>
 	{{ forms.radioGroup({
 		name: name~'[ends]',
