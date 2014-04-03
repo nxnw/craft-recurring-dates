@@ -1,0 +1,6 @@
+{
+    "require": {
+        "mynameiszanders/when": "dev-master",
+        "simshaun/recurr": "dev-master"
+    }
+}
