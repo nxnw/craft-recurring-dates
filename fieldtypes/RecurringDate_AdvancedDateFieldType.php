@@ -71,7 +71,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 						$rule->setFreq(Recurr\RecurrenceRule::FREQ_WEEKLY);
 						if( empty($weekDays) ){
 							//If weekdays empty set monday by default
-							$rule->setByDay(array("MO"));
+							$rule->setByDay(array('MO'));
 						}
 						else{
 							$rule->setByDay($weekDays);
@@ -80,6 +80,16 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 
 				case 'monthly':
 						$rule->setFreq(Recurr\RecurrenceRule::FREQ_MONTHLY);
+						if( $repeatBy == 'month' ){
+							$dayOfMonth = date('j', strtotime($startDate));
+							$rule->setByMonthDay(array($dayOfMonth));
+						}
+						else if( $repeatBy == 'week' ){
+							$uStartDate = strtotime($startDate);
+							$dayOfWeek = strtoupper( substr( date( 'D', $uStartDate ), 0, -1) );
+							$numberOfWeek = ceil( date( 'j', $uStartDate ) / 7 );
+							$rule->setByDay(array('+'.$numberOfWeek . $dayOfWeek));
+						}
 					break;
 
 				case 'yearly':
@@ -87,7 +97,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 					break;
 			}
 
-			return $startDate . ' | ' . $rule->getString();
+			return strtotime($startDate) . ' | ' . $rule->getString();
 		}
 		else{
 			return $startDate;
