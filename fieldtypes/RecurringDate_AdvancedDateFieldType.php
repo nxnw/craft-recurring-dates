@@ -28,11 +28,47 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		));
 	}
 
+	public function validate($value){
+		$postContent = $this->element->getContentFromPost();
+		$value = $postContent[$this->model->handle];
+
+		$startDate = $value['startdate']['date'];
+		$startTime = $value['starttime']['time'];
+		$endDate = $value['enddate']['date'];
+		$endTime = $value['endtime']['time'];
+
+		$errors = array();
+
+		if( empty($startDate) ){
+			$errors[] = Craft::t('There must be a valid Start Date');
+		}
+
+		//Checking Dates
+		if( !empty($endDate) && !empty($startDate) && empty($endTime) && empty($startTime) ){
+			if( strtotime($endDate) < strtotime($startDate) ){
+				$errors[] = Craft::t('End Date must be after the Start Date');
+			}
+		}
+
+		//Checking Times
+		if( !empty($endDate) && !empty($startDate) && !empty($endTime) && !empty($startTime) ){
+			if( strtotime($endDate . ' ' . $endTime) < strtotime($startDate . ' ' . $startTime) ){
+				$errors[] = Craft::t('End Date must be after the Start Date');
+			}
+		}
+
+		if($errors){
+			return $errors;
+		}
+		else{
+			return true;
+		}
+	}
+
 	public function prepValueFromPost($value){
 		// echo '<pre>';
 		// var_dump($value);
 		// echo '</pre>';
-
 		$allday = $value['allday'];
 		$startDate = $value['startdate']['date'];
 		$startTime = $value['starttime']['time'];
@@ -97,11 +133,24 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 					break;
 			}
 
-			return strtotime($startDate) . ' | ' . $rule->getString();
+			if($startTime){
+				$time = strtotime($startDate . ' ' . $startTime);
+				return 'DTSTART=' . date('Ymd\THis', $time) . ';' . $rule->getString();
+			}
+			else{
+				$time = strtotime($startDate);
+				return 'DTSTART=' . date('Ymd', $time) . ';' . $rule->getString();
+			}
 		}
 		else{
-			return $startDate;
+			if($startTime){
+				$time = strtotime($startDate . ' ' . $startTime);
+				return 'DTSTART=' . date('Ymd\THis', $time) . ';';
+			}
+			else{
+				$time = strtotime($startDate);
+				return 'DTSTART=' . date('Ymd', $time) . ';';
+			}		
 		}
-
 	}
 }
