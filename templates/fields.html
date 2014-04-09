@@ -13,6 +13,7 @@
 	{{ forms.lightswitch({
 		id: name~'allday',
 		name: name~'[allday]',
+		on: (allday is defined ? allday : null)
 	}) }}
 </div>
 <div class="field starttime">
@@ -21,11 +22,13 @@
 	</div>
 	{{ forms.date({
 		name: name~'[startdate]',
-		id: name~'startdate'
+		id: name~'startdate',
+		value: startdate
 	}) }}
 	{{ forms.time({
 		name: name~'[starttime]',
-		id: name~'starttime'
+		id: name~'starttime',
+		value: starttime
 	}) }}
 </div>
 <div class="field endtime">
@@ -34,11 +37,13 @@
 	</div>
 	{{ forms.date({
 		name: name~'[enddate]',
-		id: name~'enddate'
+		id: name~'enddate',
+		value: enddate
 	}) }}
 	{{ forms.time({
 		name: name~'[endtime]',
-		id: name~'endtime'
+		id: name~'endtime',
+		value: endtime
 	}) }}
 </div>
 <div class="field repeats">
@@ -50,6 +55,7 @@
 	</div>
 	{{ forms.lightswitch({
 		name: name~'[repeats]',
+		on: repeats
 	}) }}
 </div>
 <div class="field interval">
@@ -58,7 +64,7 @@
 	</div>
 	{{ forms.select({
 		name: name~'[interval]',
-		value: 'daily',
+		value: (interval ? interval : 'daily'),
 		options: {
 			'daily': 'Daily',
 			'weekly': 'Weekly',
@@ -73,6 +79,7 @@
 	</div>
 	{{ forms.select({
 		name: name~'[every]',
+		value: ( every ? every : 1 ),
 		options: {
 			1: 1,
 			2: 2,
@@ -115,6 +122,7 @@
 	</div>
 	{{ forms.checkboxGroup({
 		name: name~'[on]',
+		values: (on is defined ? on : null),
 		options: {
 			'SU' : 'S',
 			'MO' : 'M',
@@ -132,20 +140,11 @@
 	</div>
 	{{ forms.radioGroup({
 		name: name~'[by]',
-		value: 'month',
+		value: ( by is defined ? by : 'month'),
 		options: {
 			'month' : 'Day of Month',
 			'week' : 'Day of Week',
 		}
-	}) }}
-</div>
-<div class="field repeatstart">
-	<div class="heading">
-		<label for="{{ name }}-repeatstart">Start Date</label>
-	</div>
-	{{ forms.date({
-		name: name~'[repeatstart]',
-		id: name~'[ends]'
 	}) }}
 </div>
 <div class="field ends">
@@ -154,11 +153,13 @@
 	</div>
 	{{ forms.radioGroup({
 		name: name~'[ends]',
-		value: 'never',
+		value: (ends is defined ? ends : 'never'),
 		options: {
 			'never' : 'Never',
-			'after' : 'After '~ forms.text({ name: name~'[occurrences]', size: '20px', maxlength: '5' }) ~' Occurences',
-			'until' : 'Date '~ forms.date({name: name~'[untildate]', id: name~'untildate'})
+			'after' : 'After '~ forms.text({ name: name~'[occurrences]', 
+			value: ( occurrences is defined ? occurrences : null ), size: '20px', maxlength: '5' }) ~' Occurences',
+			'until' : 'Date '~ forms.date({name: name~'[untildate]', 
+			value: ( untildate is defined ? untildate : null ), id: name~'untildate'})
 		}
 	}) }}
 </div>
