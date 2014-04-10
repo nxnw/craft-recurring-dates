@@ -64,7 +64,7 @@
 	</div>
 	{{ forms.select({
 		name: name~'[interval]',
-		value: (interval ? interval : 'daily'),
+		value: (interval is defined ? interval : 'daily'),
 		options: {
 			'daily': 'Daily',
 			'weekly': 'Weekly',
@@ -79,7 +79,7 @@
 	</div>
 	{{ forms.select({
 		name: name~'[every]',
-		value: ( every ? every : 1 ),
+		value: ( every is defined ? every : 1 ),
 		options: {
 			1: 1,
 			2: 2,

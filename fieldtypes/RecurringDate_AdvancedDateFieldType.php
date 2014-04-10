@@ -20,10 +20,14 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 	public function getInputHtml($name, $value)
 	{
 
-		$fieldValues = array(
-			'name' => $name,
-			'value' => $value,
-		);
+		$value['name'] = $name;
+		
+		$id = craft()->templates->formatInputId($name);
+
+		return craft()->templates->render('recurringdate/fields', $value);
+	}
+
+	public function prepValue($value){
 
 		//If it repeats and has an rrule object
 		if( strpos($value, "FREQ") !== false ){
@@ -52,6 +56,15 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 			$fieldValues['interval'] = strtolower($rule->getFreqAsText());
 			$fieldValues['every'] = $rule->getInterval();
 			$fieldValues['on'] = $rule->getByDay();
+
+			$ruleTransformer = new Recurr\RecurrenceRuleTransformer($rule, 300);
+			$dates = $ruleTransformer->getComputedArray();
+
+			$fieldValues['dates'] = array();
+			foreach ($dates as $date) {
+				$dateString = $date->format('Ymd\THis');
+				$fieldValues['dates'][] = \Craft\DateTime::createFromFormat('Ymd\THis', $dateString);
+	 		}
 		}
 		else{
 			$startDateTime = rtrim(explode('DTSTART=', $value)[1], ';');
@@ -66,6 +79,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 			}
 
 			$fieldValues['repeats'] = false;
+			$fieldValues['dates'][] = $startDate;
 		}
 
 		$fieldValues['startdate'] = $startDate;
@@ -107,24 +121,8 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		if( strpos($value, "ALLDAY") !== false ){
 			$fieldValues['allday'] = true;
 		}
-		
-		$id = craft()->templates->formatInputId($name);
 
-		return craft()->templates->render('recurringdate/fields', $fieldValues);
-		// $allday = $value['allday'];
-		// $startDate = $value['startdate']['date'];
-		// $startTime = $value['starttime']['time'];
-		// $endDate = $value['enddate']['date'];
-		// $endTime = $value['endtime']['time'];
-		// $repeats = $value['repeats']; //Does it repeat?
-		// $frequency = $value['interval']; //Weekly, Daily, Monthly, Yearly
-		// $interval = $value['every']; // i.e. Every 1-30 Months?
-		// $weekDays = $value['on']; //Which weekdays
-		// $repeatBy = $value['by']; //Monthly, by day of week, or day of month
-		// $repeatStart = $value['startdate']['date']; //May not use this
-		// $ends = $value['ends']; //how it ends (never, after, until)
-		// $count = $value['occurrences']; // if ending occurs amounts
-		// $untilDate = $value['untildate']['date']; // if ending until date
+		return $fieldValues;
 	}
 
 	public function validate($value){
