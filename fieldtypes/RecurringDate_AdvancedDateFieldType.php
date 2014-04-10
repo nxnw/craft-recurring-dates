@@ -3,6 +3,7 @@ namespace Craft;
 
 use When;
 use Recurr;
+use RecurringDate;
 
 class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 {
@@ -29,103 +30,44 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 
 	public function prepValue($value){
 
+		$dateObj = new RecurringDate\AdvancedDate($value);
+		$rule = $dateObj->getRule();
+
+		$fieldValues['startdate'] = $dateObj->getStartDate();
+		$fieldValues['starttime'] = $dateObj->getStartTime();
+		$fieldValues['enddate'] = $dateObj->getEndDate();
+		$fieldValues['endtime'] = $dateObj->getEndTime();
+		$fieldValues['dates'] = $dateObj->getDates();
+		
 		//If it repeats and has an rrule object
-		if( strpos($value, "FREQ") !== false ){
-			$rule = new Recurr\RecurrenceRule($value);
-
-			$startDateStr = $rule->getStartDate()->format('Ymd');
-			$startDate = \Craft\DateTime::createFromFormat('Ymd', $startDateStr);
+		if( $dateObj->isRecurring() ){
 			
-			//If a time is actually set on the start date
-			if( strpos( explode(';', explode( 'DTSTART=', $value)[1])[0], 'T') ) {
-				$startTimeStr = $rule->getStartDate()->format('His');
-				$startTime = \Craft\DateTime::createFromFormat('His', $startTimeStr);
-			}
-			else{
-				$startTime = null;
-			}
-
-			if( strpos($value, "BYMONTHDAY") ){
-				$fieldValues['by'] = 'month';
-			}
-			elseif( strpos($value, "BYDAY") ) {
-				$fieldValues['by'] = 'week';
-			}
-
+			$fieldValues['by'] = $dateObj->getMonthBy();
 			$fieldValues['repeats'] = true;
 			$fieldValues['interval'] = strtolower($rule->getFreqAsText());
 			$fieldValues['every'] = $rule->getInterval();
 			$fieldValues['on'] = $rule->getByDay();
+			
+			$endMethod = $dateObj->getEndProperty();
+			$fieldValues['ends'] = $endMethod;
 
-			$ruleTransformer = new Recurr\RecurrenceRuleTransformer($rule, 300);
-			$dates = $ruleTransformer->getComputedArray();
+			if( $endMethod == 'after' ){
+				$fieldValues['occurrences'] = $rule->getCount();
+			}
+			elseif( $endMethod == 'until' ){
+				$fieldValues['untildate'] = $dateObj->getUntilDate();
+			}
 
-			$fieldValues['dates'] = array();
-			foreach ($dates as $date) {
-				$dateString = $date->format('Ymd\THis');
-				$fieldValues['dates'][] = \Craft\DateTime::createFromFormat('Ymd\THis', $dateString);
-	 		}
 		}
 		elseif( strpos($value, "DTSTART") !== false ){
-			$startDateTime = rtrim(explode('DTSTART=', $value)[1], ';');
-			$startDate = \Craft\DateTime::createFromFormat('Ymd\THis', $startDateTime);
-
-			if( strpos($startDateTime, 'T') ) {
-				$startTimeStr = date('His', strtotime($startDateTime));
-				$startTime = \Craft\DateTime::createFromFormat('His', $startTimeStr);
-			}
-			else{
-				$startTime = null;
-			}
-
 			$fieldValues['repeats'] = false;
-			$fieldValues['dates'][] = $startDate;
 		}
 		else{
-			$startDate = null;
-			$startTime = null;
 			$fieldValues['repeats'] = false;
 		}
 
-		$fieldValues['startdate'] = $startDate;
-		$fieldValues['starttime'] = $startTime;
-
-		//If an end date was set
-		if( strpos($value, "DTEND") !== false ){
-			$endDateTime = explode(';', explode( 'DTEND=', $value)[1])[0];
-			$endDate = \Craft\DateTime::createFromFormat('Ymd\THis', $endDateTime);
-			
-			//If an end time was set
-			if( strpos($endDateTime, 'T') ) {
-				$endTimeStr = date('His', strtotime($endDateTime));
-				$endTime = \Craft\DateTime::createFromFormat('His', $endTimeStr);
-			}
-			else{
-				$endTime = null;
-			}
-
-			$fieldValues['enddate'] = $endDate;
-			$fieldValues['endtime'] = $endTime;
-		}
-		else{
-			$fieldValues['enddate'] = null;
-			$fieldValues['endtime'] = null;
-		}
-
-		if( strpos($value, "COUNT") !== false ){
-			$fieldValues['ends'] = 'after';
-			$fieldValues['occurrences'] = $rule->getCount();
-		}
-		elseif( strpos($value, "UNTIL") !== false ){
-			$fieldValues['ends'] = 'until';
-			$untilDateStr = $rule->getUntil()->format('Ymd');
-			$untilDate = \Craft\DateTime::createFromFormat('Ymd', $untilDateStr);
-			$fieldValues['untildate'] = $untilDate;
-		}
-
-		if( strpos($value, "ALLDAY") !== false ){
-			$fieldValues['allday'] = true;
-		}
+		//Set allday variable
+		$fieldValues['allday'] = $dateObj->isAllday();
 
 		return $fieldValues;
 	}
@@ -268,7 +210,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		}
 
 		if($allday){
-			$dbString = 'ALLDAY;' . $dbString;
+			$dbString = 'ALLDAY=1;' . $dbString;
 		}
 
 		return $dbString;
