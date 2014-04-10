@@ -66,7 +66,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 				$fieldValues['dates'][] = \Craft\DateTime::createFromFormat('Ymd\THis', $dateString);
 	 		}
 		}
-		else{
+		elseif( strpos($value, "DTSTART") !== false ){
 			$startDateTime = rtrim(explode('DTSTART=', $value)[1], ';');
 			$startDate = \Craft\DateTime::createFromFormat('Ymd\THis', $startDateTime);
 
@@ -80,6 +80,11 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 
 			$fieldValues['repeats'] = false;
 			$fieldValues['dates'][] = $startDate;
+		}
+		else{
+			$startDate = null;
+			$startTime = null;
+			$fieldValues['repeats'] = false;
 		}
 
 		$fieldValues['startdate'] = $startDate;
