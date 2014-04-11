@@ -97,7 +97,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		//Checking Times
 		if( !empty($endDate) && !empty($startDate) && !empty($endTime) && !empty($startTime) ){
 			if( strtotime($endDate . ' ' . $endTime) < strtotime($startDate . ' ' . $startTime) ){
-				$errors[] = Craft::t('End Date must be after the Start Date');
+				$errors[] = Craft::t('End Date/Time must be after the Start Date/Time');
 			}
 		}
 

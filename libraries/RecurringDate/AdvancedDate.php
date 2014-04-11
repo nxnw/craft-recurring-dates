@@ -32,14 +32,15 @@ class AdvancedDate {
 	public function getStartDate() {
 
 		if( strpos($this->value, "DTSTART") !== false ){
-
-			if( $this->isRecurring() ){
-				$startFormat = $this->rule->getStartDate()->format('Ymd');
-				$startDate = \Craft\DateTime::createFromFormat('Ymd', $startFormat);
+			
+			$startDateTime = $this->getBetween($this->value, 'DTSTART=', ';');
+			
+			//If time is set we have to change the format
+			if( strpos($startDateTime, 'T') !== false ) {
+				$startDate = \Craft\DateTime::createFromFormat('Ymd\THis', $startDateTime);
 			}
 			else{
-				$startDateTime = rtrim(explode('DTSTART=', $this->value)[1], ';');
-				$startDate = \Craft\DateTime::createFromFormat('Ymd\THis', $startDateTime);
+				$startDate = \Craft\DateTime::createFromFormat('Ymd', $startDateTime);
 			}
 		}
 		else{
@@ -51,15 +52,16 @@ class AdvancedDate {
 
 	public function getStartTime() {
 		
-		if( strpos( explode( ';', explode( 'DTSTART=', $this->value )[1] )[0], 'T' ) !== false ) {
+		if( strpos($this->value, "DTSTART") !== false ){
 
-			if( $this->isRecurring() ){
-				$startTimeStr = $this->rule->getStartDate()->format('His');
-				$startTime = \Craft\DateTime::createFromFormat('His', $startTimeStr);
+			$startDateTime = $this->getBetween($this->value, 'DTSTART=', ';');
+
+			if( strpos( $startDateTime, 'T' ) !== false ) {
+				$startDateTime = explode('T', $startDateTime)[1];
+				$startTime = \Craft\DateTime::createFromFormat('His', $startDateTime);
 			}
 			else{
-				$startDateTime = rtrim(explode('DTSTART=', $this->value)[1], ';');
-				$startDate = \Craft\DateTime::createFromFormat('His', $startDateTime);
+				$startTime = null;
 			}
 		}
 		else{
@@ -67,6 +69,48 @@ class AdvancedDate {
 		}
 
 		return $startTime;
+	}
+
+	public function getEndDate() {
+
+		if( strpos($this->value, "DTEND") !== false ){
+			
+			$endDateTime = $this->getBetween($this->value, 'DTEND=', ';');
+			
+			//If time is set we have to change the format
+			if( strpos($endDateTime, 'T') !== false ) {
+				$endDate = \Craft\DateTime::createFromFormat('Ymd\THis', $endDateTime);
+			}
+			else{
+				$endDate = \Craft\DateTime::createFromFormat('Ymd', $endDateTime);
+			}
+		}
+		else{
+			$endDate = null;
+		}
+
+		return $endDate;
+	}
+
+	public function getEndTime() {
+		
+		if( strpos($this->value, "DTEND") !== false ){
+
+			$endDateTime = $this->getBetween($this->value, 'DTEND=', ';');
+
+			if( strpos( $endDateTime, 'T' ) !== false ) {
+				$endDateTime = explode('T', $endDateTime)[1];
+				$endTime = \Craft\DateTime::createFromFormat('His', $endDateTime);
+			}
+			else{
+				$endTime = null;
+			}
+		}
+		else{
+			$endTime = null;
+		}
+
+		return $endTime;
 	}
 
 	public function getDates() {
@@ -107,48 +151,9 @@ class AdvancedDate {
 	 		return $fullDates;
 		}
 		else{
-			return array( array( 'start' => $this->getStartDate() ) );
+			return array( array( 'start' => $this->getStartDate(), 'end' => $this->getEndDate() ) );
 		}
 
-	}
-
-	public function getEndDate() {
-
-		if( strpos($this->value, "DTEND") !== false ){
-			
-			$endDateTime = explode(';', explode( 'DTEND=', $this->value)[1])[0];
-			
-			//If time is set we have to change the format
-			if( strpos( explode(';', explode( 'DTEND=', $this->value)[1])[0], 'T' ) !== false ) {
-				$endDate = \Craft\DateTime::createFromFormat('Ymd\THis', $endDateTime);
-			}
-			else{
-				$endDate = \Craft\DateTime::createFromFormat('Ymd', $endDateTime);
-			}
-		}
-		else{
-			$endDate = null;
-		}
-
-		return $endDate;
-	}
-
-	public function getEndTime() {
-		
-		if( strpos($this->value, "DTEND") !== false ){
-			if( strpos( explode(';', explode( 'DTEND=', $this->value)[1])[0], 'T' ) !== false ) {
-				$endDateTime = rtrim(explode('DTEND=', $this->value)[1], ';');
-				$endTime = \Craft\DateTime::createFromFormat('His', $endDateTime);
-			}
-			else{
-				$endTime = null;
-			}
-		}
-		else{
-			$endTime = null;
-		}
-
-		return $endTime;
 	}
 
 	public function getMonthBy() {
@@ -195,5 +200,14 @@ class AdvancedDate {
 
 	public function getRule(){
 		return $this->rule;
+	}
+
+	private function getBetween($content,$start,$end){
+	    $r = explode($start, $content);
+	    if (isset($r[1])){
+	        $r = explode($end, $r[1]);
+	        return $r[0];
+	    }
+	    return '';
 	}
 }
