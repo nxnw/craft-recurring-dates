@@ -57,7 +57,8 @@ class AdvancedDate {
 			$startDateTime = $this->getBetween($this->value, 'DTSTART=', ';');
 
 			if( strpos( $startDateTime, 'T' ) !== false ) {
-				$startDateTime = explode('T', $startDateTime)[1];
+				$startDateTime = explode('T', $startDateTime);
+				$startDateTime = $startDateTime[1];
 				$startTime = \Craft\DateTime::createFromFormat('His', $startDateTime);
 			}
 			else{
@@ -99,7 +100,8 @@ class AdvancedDate {
 			$endDateTime = $this->getBetween($this->value, 'DTEND=', ';');
 
 			if( strpos( $endDateTime, 'T' ) !== false ) {
-				$endDateTime = explode('T', $endDateTime)[1];
+				$endDateTime = explode('T', $endDateTime);
+				$endDateTime = $endDateTime[1];
 				$endTime = \Craft\DateTime::createFromFormat('His', $endDateTime);
 			}
 			else{
