@@ -88,22 +88,32 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		$endDate = $value['enddate']['date'];
 		$endTime = $value['endtime']['time'];
 
+		$allday = $value['allday'];
+
 		$errors = array();
 
 		if( empty($startDate) ){
 			$errors[] = Craft::t('There must be a valid Start Date');
 		}
 
+		if( empty($endDate) && !empty($endTime) ){
+			$errors[] = Craft::t('If End Time is set, End Date must also be set');
+		}
+
+		if( !empty($endDate) && empty($endTime) && !$allday ){
+			$errors[] = Craft::t('If End Date is set, End Time must also be set');
+		}
+
 		//Checking Dates
 		if( !empty($endDate) && !empty($startDate) && empty($endTime) && empty($startTime) ){
-			if( strtotime($endDate) < strtotime($startDate) ){
+			if( strtotime($endDate) <= strtotime($startDate) ){
 				$errors[] = Craft::t('End Date must be after the Start Date');
 			}
 		}
 
 		//Checking Times
 		if( !empty($endDate) && !empty($startDate) && !empty($endTime) && !empty($startTime) ){
-			if( strtotime($endDate . ' ' . $endTime) < strtotime($startDate . ' ' . $startTime) ){
+			if( strtotime($endDate . ' ' . $endTime) <= strtotime($startDate . ' ' . $startTime) ){
 				$errors[] = Craft::t('End Date/Time must be after the Start Date/Time');
 			}
 		}

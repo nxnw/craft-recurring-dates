@@ -12,7 +12,7 @@ class RecurringDatePlugin extends BasePlugin
 
 	function getVersion()
 	{
-		return '0.1';
+		return '1.0';
 	}
 
 	function getDeveloper()
