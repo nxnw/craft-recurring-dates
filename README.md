@@ -1,8 +1,6 @@
 craft-recurring-dates
 =====================
 
-#DO NOT USE - STILL IN DEVELOPMENT!!!!!
-
 This is a plugin for the Craft CMS to add recurring dates functionality. It adds a new field type called Advanced Date which has the recurring date functions. It stores the date and an rrule in the data base and returns an array of dates to the twig templates. I'm using the [Recurr library](https://github.com/simshaun/recurr) by [simshaun](https://github.com/simshaun) to build and parse the rrule.
 
 ###Installation
@@ -23,3 +21,18 @@ Example Output Usage
 	  {{ date.start|date("n/j/Y H:i:s") }}{{ date.end is defined ? ' -- ' ~ date.end|date("n/j/Y H:i:s") }}<br>
   {% endfor %}
 ```
+
+Properties available for output for each Advanced Date Field
+* `dates` - Array of Craft DateTime Objects - Date of recurring events if event recurrs, or single item if not, `dates[i].start` and `dates[i].end`, end can be null if not set by the user
+* `startdate` - Craft DateTime Object - Start date set for the event 
+* `starttime` - Craft DateTime Object - Same as startdate
+* `enddate` - Craft DateTime Object - End date set for the event, can be null if not set 
+* `endtime` - Craft DateTime Object - Same as enddate
+* `repeats` - Boolean - If the event repeats
+* `interval` - String - Recurrence frequency, 'daily', 'weekly', 'monthly', 'yearly'
+* `every` - Int - Recurrence Interval, integer from 1-31
+* `on` - Array - days of the week that the event occurs, undefined if interval not weekly, 'SU', 'MO', 'TU', etc...
+* `by` - String - by day of week or day of month, undefined if interval not monthly, 'week', 'month'
+* `ends` - String - how the event ends, 'never', 'after', 'until'
+* `occurences` - Int - How many times this occurs, undefined if `ends` is not 'after'
+* `untildate` - Craft DateTime Object - Date event goes until, undefined if `ends` is not 'until'
