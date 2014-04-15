@@ -34,10 +34,17 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		$rule = $dateObj->getRule();
 
 		$fieldValues['startdate'] = $dateObj->getStartDate();
-		$fieldValues['starttime'] = $dateObj->getStartTime();
 		$fieldValues['enddate'] = $dateObj->getEndDate();
-		$fieldValues['endtime'] = $dateObj->getEndTime();
 		$fieldValues['dates'] = $dateObj->getDates();
+
+		if( $dateObj->isAllday() ){
+			$fieldValues['starttime'] = null;
+			$fieldValues['endtime'] = null;
+		}
+		else{
+			$fieldValues['starttime'] = $dateObj->getStartTime();
+			$fieldValues['endtime'] = $dateObj->getEndTime();
+		}
 		
 		//If it repeats and has an rrule object
 		if( $dateObj->isRecurring() ){
@@ -205,7 +212,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 			}
 			else{
 				$time = strtotime($endDate);
-				$dbString .= 'DTEND=' . date('Ymd', $time) . ';' . $dbString;
+				$dbString = 'DTEND=' . date('Ymd', $time) . ';' . $dbString;
 			}
 		}
 

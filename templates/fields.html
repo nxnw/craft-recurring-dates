@@ -1,5 +1,4 @@
 {% import "_includes/forms" as forms %}
-{% includeCssResource "recurringdate/css/advanceddate.css" %}
 {% includeJsResource "recurringdate/js/advanceddate.js" %}
 
 <div class="advanced_date-field" id="{{ name }}"></div>
@@ -153,7 +152,7 @@
 		</div>
 		{{ forms.radioGroup({
 			name: name~'[by]',
-			value: ( by is defined ? by : 'month'),
+			value: (by is defined and by is not null ? by : 'month'),
 			options: {
 				'month' : 'Day of Month',
 				'week' : 'Day of Week',

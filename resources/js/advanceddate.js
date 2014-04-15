@@ -57,8 +57,6 @@ $(function() {
 
   repeatSelect.on('change', function() {
 
-    $('#fields-repeat-every').val(1);
-
     repeatOn.hide();
     repeatBy.hide();
 
