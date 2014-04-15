@@ -10,41 +10,47 @@
 			<p>Does this event last all day?</p>
 		</div>
 	</div>
+	<div id='allday-switch'>
 	{{ forms.lightswitch({
 		id: name~'allday',
 		name: name~'[allday]',
 		on: (allday is defined ? allday : null)
 	}) }}
+	</div>
 </div>
 <div class="field starttime">
 	<div class="heading">
-		<label for="{{ name }}-starttime">Start Time</label>
+		<label for="{{ name }}-starttime">Event Start</label>
 	</div>
 	{{ forms.date({
 		name: name~'[startdate]',
 		id: name~'startdate',
 		value: startdate
 	}) }}
+	<span class='starttime-time'>
 	{{ forms.time({
 		name: name~'[starttime]',
 		id: name~'starttime',
 		value: starttime
 	}) }}
+	</span>
 </div>
 <div class="field endtime">
 	<div class="heading">
-		<label for="{{ name }}-endtime">End Time</label>
+		<label for="{{ name }}-endtime">Event End</label>
 	</div>
 	{{ forms.date({
 		name: name~'[enddate]',
 		id: name~'enddate',
 		value: enddate
 	}) }}
+	<span class='endtime-time'>
 	{{ forms.time({
 		name: name~'[endtime]',
 		id: name~'endtime',
 		value: endtime
 	}) }}
+	</span>
 </div>
 <div class="field repeats">
 	<div class="heading">
@@ -53,113 +59,149 @@
 			<p>Does this event occur multiple times?</p>
 		</div>
 	</div>
+	<div id='repeats-switch'>
 	{{ forms.lightswitch({
 		name: name~'[repeats]',
 		on: repeats
 	}) }}
-</div>
-<div class="field interval">
-	<div class="heading">
-		<label for="{{ name }}-interval">Interval</label>
 	</div>
-	{{ forms.select({
-		name: name~'[interval]',
-		value: (interval is defined ? interval : 'daily'),
-		options: {
-			'daily': 'Daily',
-			'weekly': 'Weekly',
-			'monthly': 'Monthly',
-			'yearly': 'Yearly'
-		}
-	}) }}
 </div>
-<div class="field every">
-	<div class="heading">
-		<label for="{{ name }}-every">Repeat Every</label>
+
+<div id='repeat-holder'>
+
+	<div class="field interval">
+		<div class="heading">
+			<label for="{{ name }}-interval">Interval</label>
+		</div>
+		{{ forms.select({
+			id: 'repeat-interval',
+			name: name~'[interval]',
+			value: (interval is defined ? interval : 'daily'),
+			options: {
+				'daily': 'Daily',
+				'weekly': 'Weekly',
+				'monthly': 'Monthly',
+				'yearly': 'Yearly'
+			}
+		}) }}
 	</div>
-	{{ forms.select({
-		name: name~'[every]',
-		value: ( every is defined ? every : 1 ),
-		options: {
-			1: 1,
-			2: 2,
-			3: 3,
-			4: 4,
-			5: 5,
-			6: 6,
-			7: 7,
-			8: 8,
-			9: 9,
-			10: 10,
-			11: 11,
-			12: 12,
-			13: 13,
-			14: 14,
-			15: 15,
-			16: 16,
-			17: 17,
-			18: 18,
-			19: 19,
-			20: 20,
-			21: 21,
-			22: 22,
-			23: 23,
-			24: 24,
-			25: 25,
-			26: 26,
-			27: 27,
-			28: 28,
-			29: 29,
-			30: 30,
-			31: 31,
-		}
-	}) }}
-	days
-</div>
-<div class="field on">
-	<div class="heading">
-		<label for="{{ name }}-on">Repeat On</label>
+	<div class="field every">
+		<div class="heading">
+			<label for="{{ name }}-every">Repeat Every</label>
+		</div>
+		{{ forms.select({
+			name: name~'[every]',
+			id: 'repeat-every',
+			value: ( every is defined ? every : 1 ),
+			options: {
+				1: 1,
+				2: 2,
+				3: 3,
+				4: 4,
+				5: 5,
+				6: 6,
+				7: 7,
+				8: 8,
+				9: 9,
+				10: 10,
+				11: 11,
+				12: 12,
+				13: 13,
+				14: 14,
+				15: 15,
+				16: 16,
+				17: 17,
+				18: 18,
+				19: 19,
+				20: 20,
+				21: 21,
+				22: 22,
+				23: 23,
+				24: 24,
+				25: 25,
+				26: 26,
+				27: 27,
+				28: 28,
+				29: 29,
+				30: 30,
+				31: 31,
+			}
+		}) }}
+		<span class='repeat-every-unit'>days</span>
 	</div>
-	{{ forms.checkboxGroup({
-		name: name~'[on]',
-		values: (on is defined ? on : null),
-		options: {
-			'SU' : 'S',
-			'MO' : 'M',
-			'TU' : 'T',
-			'WE' : 'W',
-			'TH' : 'T',
-			'FR' : 'F',
-			'SA' : 'S',
-		}
-	}) }}
-</div>
-<div class="field by">
-	<div class="heading">
-		<label for="{{ name }}-by">Repeat By</label>
+	<div class="field on">
+		<div class="heading">
+			<label for="{{ name }}-on">Repeat On</label>
+		</div>
+		{{ forms.checkboxGroup({
+			name: name~'[on]',
+			values: (on is defined ? on : null),
+			options: {
+				'SU' : 'Sunday',
+				'MO' : 'Monday',
+				'TU' : 'Tuesday',
+				'WE' : 'Wednesday',
+				'TH' : 'Thursday',
+				'FR' : 'Friday',
+				'SA' : 'Saturday',
+			}
+		}) }}
 	</div>
-	{{ forms.radioGroup({
-		name: name~'[by]',
-		value: ( by is defined ? by : 'month'),
-		options: {
-			'month' : 'Day of Month',
-			'week' : 'Day of Week',
-		}
-	}) }}
-</div>
-<div class="field ends">
-	<div class="heading">
-		<label for="{{ name }}-ends">Ends</label>
+	<div class="field by">
+		<div class="heading">
+			<label for="{{ name }}-by">Repeat By</label>
+		</div>
+		{{ forms.radioGroup({
+			name: name~'[by]',
+			value: ( by is defined ? by : 'month'),
+			options: {
+				'month' : 'Day of Month',
+				'week' : 'Day of Week',
+			}
+		}) }}
 	</div>
-	{{ forms.radioGroup({
-		name: name~'[ends]',
-		value: (ends is defined ? ends : 'never'),
-		options: {
-			'never' : 'Never',
-			'after' : 'After '~ forms.text({ name: name~'[occurrences]', 
-			value: ( occurrences is defined ? occurrences : null ), size: '20px', maxlength: '5' }) ~' Occurences',
-			'until' : 'Date '~ forms.date({name: name~'[untildate]', 
-			value: ( untildate is defined ? untildate : null ), id: name~'untildate'})
-		}
-	}) }}
+	<div class="field ends">
+		<div class="heading">
+			<label for="{{ name }}-ends">Repeat Ends</label>
+		</div>
+		{{ forms.select({
+			id: 'repeat-ends',
+			name: name~'[ends]',
+			value: (ends is defined ? ends : 'never'),
+			options: {
+				'never': 'Never',
+				'after': 'After',
+				'until': 'Until',
+			}
+		}) }}
+
+		<div class='field occurrences'>
+			
+			<div class='heading'>
+				<label for="occurrences">Number of Occurrences</label>
+			</div>
+			{{ forms.text({ 
+				name: name~'[occurrences]', 
+				value: ( occurrences is defined ? occurrences : null ), 
+				size: '20px', 
+				maxlength: '5'
+			}) }}
+
+		</div>
+
+		<div class='field until'>
+			
+			<div class='heading'>
+				<label for="untildate">Repeat End Date</label>
+			</div>
+			{{ forms.date({
+				name: name~'[untildate]',
+				id: name~'untildate',
+				value: ( untildate is defined ? untildate : null )
+			}) }}
+
+		</div>
+
+	</div>
+
 </div>
