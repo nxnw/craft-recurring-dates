@@ -28,6 +28,7 @@ Properties available for output for each Advanced Date Field
 * `starttime` - Craft DateTime Object - Same as startdate
 * `enddate` - Craft DateTime Object - End date set for the event, can be null if not set 
 * `endtime` - Craft DateTime Object - Same as enddate
+* `allday` - Boolean - If the event is an allday event
 * `repeats` - Boolean - If the event repeats
 * `interval` - String - Recurrence frequency, 'daily', 'weekly', 'monthly', 'yearly'
 * `every` - Int - Recurrence Interval, integer from 1-31
