@@ -25,6 +25,8 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		
 		$id = craft()->templates->formatInputId($name);
 
+		$namespaceId = craft()->templates->namespaceInputId($id);
+
 		return craft()->templates->render('recurringdate/fields', $value);
 	}
 
