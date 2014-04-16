@@ -142,20 +142,8 @@ window.advancedDate = function(id) {
     }
   };
 
-<<<<<<< HEAD
-window.advancedDate = function(namespace) {
-  console.log(namespace);
-  $('.' + namespace + '-field').each(function() {
-    var el = $(this);
-    console.log(el);
-    var id = el.attr('id');
-    el.data('ad', new advancedDateView(id));
-  });
-};
-=======
 }();
 
 $(function() {
   window.advancedDate.create('fields-ad1');
 });
->>>>>>> FETCH_HEAD
