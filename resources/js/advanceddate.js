@@ -143,7 +143,3 @@ window.advancedDate = function(id) {
   };
 
 }();
-
-$(function() {
-  window.advancedDate.create('fields-ad1');
-});
