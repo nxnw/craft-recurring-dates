@@ -27,6 +27,8 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 
 		$namespaceId = craft()->templates->namespaceInputId($id);
 
+		 craft()->templates->includeJs("$(function() { window.advancedDate('{$namespaceId}'); });");
+
 		return craft()->templates->render('recurringdate/fields', $value);
 	}
 
