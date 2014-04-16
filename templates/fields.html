@@ -9,7 +9,7 @@
 			<p>Does this event last all day?</p>
 		</div>
 	</div>
-	<div id='allday-switch'>
+	<div class='allday-switch'>
 	{{ forms.lightswitch({
 		id: name~'allday',
 		name: name~'[allday]',
@@ -58,7 +58,7 @@
 			<p>Does this event occur multiple times?</p>
 		</div>
 	</div>
-	<div id='repeats-switch'>
+	<div class='repeats-switch'>
 	{{ forms.lightswitch({
 		name: name~'[repeats]',
 		on: repeats
@@ -66,14 +66,14 @@
 	</div>
 </div>
 
-<div id='repeat-holder'>
+<div class='repeat-holder'>
 
 	<div class="field interval">
 		<div class="heading">
 			<label for="{{ name }}-interval">Interval</label>
 		</div>
 		{{ forms.select({
-			id: 'repeat-interval',
+			id: name~'repeat-interval',
 			name: name~'[interval]',
 			value: (interval is defined ? interval : 'daily'),
 			options: {
@@ -164,7 +164,7 @@
 			<label for="{{ name }}-ends">Repeat Ends</label>
 		</div>
 		{{ forms.select({
-			id: 'repeat-ends',
+			id: name~'repeat-ends',
 			name: name~'[ends]',
 			value: (ends is defined ? ends : 'never'),
 			options: {

@@ -1,123 +1,147 @@
-$(function() {
+window.advancedDateView = function(namespace) {
 
-  //
-  // Toggle the time for the start and end of the event
-  //
+  var _namespace = namespace;
+  var _root = $('#' + namespace + '-field');
 
-  var startTime = $('.field.starttime .starttime-time');
-  var endTime = $('.field.endtime .endtime-time');
+  var _init = function() {
+    _allDayToggle();
+    _repeatToggle();
+    _repeatInterval();
+    _repeatEnds();
+  };
 
-  var alldaySwitch = $('#fields-allday-switch .lightswitch').data('lightswitch');
-  alldaySwitch.settings.onChange = function() {
-    if (alldaySwitch.on) {
+  var _allDayToggle = function() {
 
-      startTime.hide();
-      endTime.hide();
+    var startTime = _root.find('.field.starttime .starttime-time');
+    var endTime = _root.find('.field.endtime .endtime-time');
+    var alldaySwitch = _root.find('.allday-switch .lightswitch').data('lightswitch');
 
-    } else {
+    var changeHandler = function() {
 
-      startTime.show();
-      endTime.show();
-    }
+      if (alldaySwitch.on) {
+
+        startTime.hide();
+        endTime.hide();
+
+      } else {
+
+        startTime.show();
+        endTime.show();
+      }
+
+    };
+
+    alldaySwitch.settings.onChange = changeHandler;
+    changeHandler();
+
 
   };
-  alldaySwitch.settings.onChange();
 
+  var _repeatToggle = function() {
 
+    var repeatHolder = _root.find('.repeat-holder');
+    var repeatsSwitch = _root.find('.repeats-switch .lightswitch').data('lightswitch');
 
-  //
-  //  Toggle the Repeating of the Events
-  //
+    var changeHandler = function() {
 
-  var repeatHolder = $('#fields-repeat-holder');
+      if (repeatsSwitch.on) {
+        repeatHolder.show();
+      } else {
+        repeatHolder.hide();
+      }
 
-  var repeatsSwitch = $('#fields-repeats-switch .lightswitch').data('lightswitch');
-  repeatsSwitch.settings.onChange = function() {
+    };
 
-    if (repeatsSwitch.on) {
-      repeatHolder.show();
-    } else {
-      repeatHolder.hide();
-    }
+    repeatsSwitch.settings.onChange = changeHandler;
+    changeHandler();
 
   };
-  repeatsSwitch.settings.onChange();
 
+  var _repeatInterval = function() {
 
-  //
-  //  Handle Updating the Repeat Interval
-  //
+    var repeatSelect = _root.find('#' + _namespace + 'repeat-interval');
 
-  var repeatSelect = $('#fields-repeat-interval');
+    var repeatOn = _root.find('.field.on');
+    var repeatBy = _root.find('.field.by');
 
-  var repeatOn = $('.field.on');
-  var repeatBy = $('.field.by');
+    var repeatEveryUnit = _root.find('.repeat-every-unit');
 
-  var repeatEveryUnit = $('.repeat-every-unit');
+    var changeHandler = function() {
 
-  repeatSelect.on('change', function() {
-
-    repeatOn.hide();
-    repeatBy.hide();
-
-    switch (repeatSelect.val()) {
-      case "daily":
-        repeatEveryUnit.html('days');
-        break;
-      case "weekly":
-        repeatEveryUnit.html('weeks');
-        break;
-      case "monthly":
-        repeatEveryUnit.html('months');
-        break;
-      case "yearly":
-        repeatEveryUnit.html('years');
-        break;
-    }
-
-    if (repeatSelect.val() === 'weekly') {
-      repeatOn.show();
-    } else {
       repeatOn.hide();
-    }
-
-    if (repeatSelect.val() === 'monthly') {
-      repeatBy.show();
-    } else {
       repeatBy.hide();
-    }
 
+      switch (repeatSelect.val()) {
+        case "daily":
+          repeatEveryUnit.html('days');
+          break;
+        case "weekly":
+          repeatEveryUnit.html('weeks');
+          break;
+        case "monthly":
+          repeatEveryUnit.html('months');
+          break;
+        case "yearly":
+          repeatEveryUnit.html('years');
+          break;
+      }
+
+      if (repeatSelect.val() === 'weekly') {
+        repeatOn.show();
+      } else {
+        repeatOn.hide();
+      }
+
+      if (repeatSelect.val() === 'monthly') {
+        repeatBy.show();
+      } else {
+        repeatBy.hide();
+      }
+
+    };
+
+    repeatSelect.on('change', changeHandler);
+    repeatSelect.trigger('change');
+
+  };
+
+  var _repeatEnds = function() {
+
+    var repeatEndsSelect = _root.find('#' + _namespace + 'repeat-ends');
+    var repeatEndOccurrences = _root.find('.field.occurrences');
+    var repeatEndUntil = _root.find('.field.until');
+
+    var changeHandler = function() {
+      if (repeatEndsSelect.val() == 'after') {
+        repeatEndOccurrences.show();
+      } else {
+        repeatEndOccurrences.hide();
+      }
+
+      if (repeatEndsSelect.val() == 'until') {
+        repeatEndUntil.show();
+      } else {
+        repeatEndUntil.hide();
+      }
+    };
+
+    repeatEndsSelect.on('change', changeHandler);
+    repeatEndsSelect.trigger('change');
+
+  };
+
+  _init();
+
+};
+
+window.advancedDate = function(namespace) {
+  $('.' + namespace + '-field').each(function() {
+    var el = $(this);
+    var id = el.attr('id');
+    el.data('ad', new advancedDateView(id));
   });
+};
 
-  repeatSelect.trigger('change');
-
-
-  //
-  //  Handle Updating the Repeat Ends Select
-  //
-
-  var repeatEndsSelect = $('#fields-repeat-ends');
-  var repeatEndOccurrences = $('.field.occurrences');
-  var repeatEndUntil = $('.field.until');
-
-
-  repeatEndsSelect.on('change', function() {
-
-    if (repeatEndsSelect.val() == 'after') {
-      repeatEndOccurrences.show();
-    } else {
-      repeatEndOccurrences.hide();
-    }
-
-    if (repeatEndsSelect.val() == 'until') {
-      repeatEndUntil.show();
-    } else {
-      repeatEndUntil.hide();
-    }
-
-  });
-
-  repeatEndsSelect.trigger('change');
-
-
+$(function() {
+  window.advancedDate('advanced_date');
 });
