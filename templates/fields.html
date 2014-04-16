@@ -24,13 +24,13 @@
 	{{ forms.date({
 		name: name~'[startdate]',
 		id: name~'startdate',
-		value: startdate
+		value: (startdate is defined ? startdate : null)
 	}) }}
 	<span class='starttime-time'>
 	{{ forms.time({
 		name: name~'[starttime]',
 		id: name~'starttime',
-		value: starttime
+		value: (starttime is defined ? starttime : null)
 	}) }}
 	</span>
 </div>
@@ -41,13 +41,13 @@
 	{{ forms.date({
 		name: name~'[enddate]',
 		id: name~'enddate',
-		value: enddate
+		value: (enddate is defined ? enddate : null)
 	}) }}
 	<span class='endtime-time'>
 	{{ forms.time({
 		name: name~'[endtime]',
 		id: name~'endtime',
-		value: endtime
+		value: (endtime is defined ? endtime : null)
 	}) }}
 	</span>
 </div>
@@ -61,7 +61,7 @@
 	<div id='repeats-switch'>
 	{{ forms.lightswitch({
 		name: name~'[repeats]',
-		on: repeats
+		on: (repeats is defined ? repeats : null)
 	}) }}
 	</div>
 </div>
