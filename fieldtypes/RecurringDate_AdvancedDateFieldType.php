@@ -1,7 +1,6 @@
 <?php
 namespace Craft;
 
-use When;
 use Recurr;
 use RecurringDate;
 

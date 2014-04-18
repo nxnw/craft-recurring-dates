@@ -3,63 +3,8 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "362bf557b3192a85d0ed78b765aff0e0",
+    "hash": "7b953949f3399ba4dac51a5c38972152",
     "packages": [
-        {
-            "name": "mynameiszanders/when",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mynameiszanders/when.git",
-                "reference": "5b67be6315bc8c1cb10f52854c003fcee288e44f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mynameiszanders/when/zipball/5b67be6315bc8c1cb10f52854c003fcee288e44f",
-                "reference": "5b67be6315bc8c1cb10f52854c003fcee288e44f",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "sami/sami": "1.2"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "When": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tom Planer",
-                    "email": "tplaner@gmail.com",
-                    "homepage": "https://github.com/tplaner"
-                },
-                {
-                    "name": "Zander Baldwin",
-                    "email": "mynameiszanders@gmail.com",
-                    "homepage": "http://mynameis.zande.rs",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Date/Calendar recursion library.",
-            "homepage": "https://github.com/mynameiszanders/when",
-            "keywords": [
-                "calendar",
-                "date",
-                "datetime",
-                "recurrence",
-                "recursion",
-                "time"
-            ],
-            "time": "2014-03-07 11:10:56"
-        },
         {
             "name": "simshaun/recurr",
             "version": "dev-master",
@@ -122,7 +67,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "mynameiszanders/when": 20,
         "simshaun/recurr": 20
     },
     "platform": [
