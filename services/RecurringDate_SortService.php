@@ -29,13 +29,21 @@ class RecurringDate_SortService extends BaseApplicationComponent
 		//Group the entries by date
 		foreach ($entries as $index => $entry) {
 			foreach ($entry->eventDate['dates'] as $i => $date) {
-				$date = $date['start'];
-				$formDate = strtotime($date->format('Ymd'));
+				$dateStart = $date['start'];
+				$formDate = strtotime($dateStart->format('Ymd'));
 				if( isset($dates[$formDate]) ){
-					$dates[$formDate][] = $entry;
+					$dates[$formDate][] = array( 
+						'entry' => $entry,
+						'start' => $date['start'],
+						'end'	=> $date['end']
+					);
 				}
 				else{
-					$dates[$formDate] = array($entry);
+					$dates[$formDate] = array(array(
+						'entry' => $entry,
+						'start' => $date['start'],
+						'end'	=> $date['end']
+					));
 				}
 			}
 		}
