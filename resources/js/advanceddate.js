@@ -61,10 +61,10 @@ window.advancedDate = function(id) {
 
     var _repeatInterval = function() {
 
-      var repeatSelect = _root.find('#' + _namespace + 'repeat-interval');
+      var repeatSelect = _root.find('#' + _namespace + 'repeat-frequency');
 
-      var repeatOn = _root.find('.field.on');
-      var repeatBy = _root.find('.field.by');
+      var repeatOn = _root.find('.field.weekdays');
+      var repeatBy = _root.find('.field.repeat_by');
 
       var repeatEveryUnit = _root.find('.repeat-every-unit');
 

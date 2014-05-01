@@ -3,11 +3,7 @@ namespace Craft;
 
 class RecurringDateVariable
 {
-	public function getEvents($entries, $field){
-		return craft()->recurringDate_sort->order($entries, $field);
-	}
-
-	public function getGroupedEvents($entries, $field){
-		return craft()->recurringDate_sort->group($entries, $field);
+	public function getDates($handle, $limit = null, $order = 'ASC', $groupBy = false){
+		return craft()->recurringDate->getDates($handle, $limit, $order, $groupBy);
 	}
 }
