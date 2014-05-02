@@ -78,9 +78,10 @@ class RecurringDateService extends BaseApplicationComponent
 		$endTime = $value['end_time']['time'];
 
 		$allday = $value['allday'];
-		
+		$repeats = $value['repeats'];
 		$ends = $value['ends'];
 		$until = $value['until']['date'];
+		$count = $value['count'];
 
 		$errors = array();
 
@@ -117,6 +118,11 @@ class RecurringDateService extends BaseApplicationComponent
 		//Check until date
 		if( empty($until) && $ends == 'until' && $repeats ){
 			$errors[] = Craft::t('Until date must be set if repeating until a specific date');
+		}
+		elseif( !empty($until) && $ends == 'until' && $repeats ){
+			if( strtotime($until) <= strtotime($startDate) ){
+				$errors[] = Craft::t('Until date must be after the Start Date');
+			}
 		}
 
 		//Check after count

@@ -1,5 +1,4 @@
 {% import "_includes/forms" as forms %}
-{% includeJsResource "recurringdate/js/advanceddate.js" %}
 
 <div class="advanced_date-field" id="{{ handle }}"></div>
 <div class="field all-day">
@@ -199,7 +198,12 @@
 			}) }}
 
 		</div>
-
 	</div>
-
 </div>
+
+{% set rangeSliderFieldJs %}
+	$(function() { window.advancedDate.create('{{ namespaceId }}'); });
+{% endset %}
+{% includeJs rangeSliderFieldJs %}
+
+{% includeJsResource "recurringdate/js/advanceddate.js" %}

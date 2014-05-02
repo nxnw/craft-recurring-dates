@@ -27,7 +27,7 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 
 		$namespaceId = craft()->templates->namespaceInputId($id);
 
-		craft()->templates->includeJs("$(function() { window.advancedDate.create('{$namespaceId}'); });");
+		craft()->templates->includeJsResource('recurringdate/js/advanceddate.js');
 
 		if(!empty($value)) {
 			$ruleModel = RecurringDate_RuleModel::populateModel($value);
@@ -36,7 +36,10 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 			$ruleModel->handle = $name;
 		}
 
-		return craft()->templates->render('recurringdate/fields', $ruleModel->getAttributes());
+		$attr = $ruleModel->getAttributes();
+		$attr['namespaceId'] = $namespaceId;
+
+		return craft()->templates->render('recurringdate/fields', $attr);
 	}
 
 	//Leaving the db to be displayed
