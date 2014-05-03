@@ -1,66 +1,65 @@
 {% import "_includes/forms" as forms %}
-{% includeJsResource "recurringdate/js/advanceddate.js" %}
 
-<div class="advanced_date-field" id="{{ name }}"></div>
+<div class="advanced_date-field" id="{{ handle }}"></div>
 <div class="field all-day">
 	<div class="heading">
-		<label for="{{ name }}-allday">All Day</label>
+		<label for="{{ handle }}-allday">All Day</label>
 		<div class="instructions">
 			<p>Does this event last all day?</p>
 		</div>
 	</div>
 	<div class='allday-switch'>
 	{{ forms.lightswitch({
-		id: name~'allday',
-		name: name~'[allday]',
+		id: handle~'allday',
+		name: handle~'[allday]',
 		on: (allday is defined ? allday : null)
 	}) }}
 	</div>
 </div>
 <div class="field starttime">
 	<div class="heading">
-		<label for="{{ name }}-starttime">Event Start</label>
+		<label for="{{ handle }}-starttime">Event Start</label>
 	</div>
 	{{ forms.date({
-		name: name~'[startdate]',
-		id: name~'startdate',
-		value: (startdate is defined ? startdate : null)
+		name: handle~'[start_date]',
+		id: handle~'start_date',
+		value: (start_date is defined ? start_date : null)
 	}) }}
 	<span class='starttime-time'>
 	{{ forms.time({
-		name: name~'[starttime]',
-		id: name~'starttime',
-		value: (starttime is defined ? starttime : null)
+		name: handle~'[start_time]',
+		id: handle~'start_time',
+		value: (start_time is defined ? start_time : null)
 	}) }}
 	</span>
 </div>
 <div class="field endtime">
 	<div class="heading">
-		<label for="{{ name }}-endtime">Event End</label>
+		<label for="{{ handle }}-endtime">Event End</label>
 	</div>
 	{{ forms.date({
-		name: name~'[enddate]',
-		id: name~'enddate',
-		value: (enddate is defined ? enddate : null)
+		name: handle~'[end_date]',
+		id: handle~'end_date',
+		value: (end_date is defined ? end_date : null)
 	}) }}
 	<span class='endtime-time'>
 	{{ forms.time({
-		name: name~'[endtime]',
-		id: name~'endtime',
-		value: (endtime is defined ? endtime : null)
+		name: handle~'[end_time]',
+		id: handle~'end_time',
+		value: (end_time is defined ? end_time : null)
 	}) }}
 	</span>
 </div>
 <div class="field repeats">
 	<div class="heading">
-		<label for="{{ name }}-repeats">Repeats</label>
+		<label for="{{ handle }}-repeats">Repeats</label>
 		<div class="instructions">
 			<p>Does this event occur multiple times?</p>
 		</div>
 	</div>
 	<div class='repeats-switch'>
 	{{ forms.lightswitch({
-		name: name~'[repeats]',
+		name: handle~'[repeats]',
 		on: (repeats is defined ? repeats : null)
 	}) }}
 	</div>
@@ -68,14 +67,14 @@
 
 <div class='repeat-holder'>
 
-	<div class="field interval">
+	<div class="field frequency">
 		<div class="heading">
-			<label for="{{ name }}-interval">Interval</label>
+			<label for="{{ handle }}-frequency">Frequency</label>
 		</div>
 		{{ forms.select({
-			id: name~'repeat-interval',
-			name: name~'[interval]',
-			value: (interval is defined ? interval : 'daily'),
+			id: handle~'repeat-frequency',
+			name: handle~'[frequency]',
+			value: (frequency is defined ? frequency : 'daily'),
 			options: {
 				'daily': 'Daily',
 				'weekly': 'Weekly',
@@ -84,14 +83,14 @@
 			}
 		}) }}
 	</div>
-	<div class="field every">
+	<div class="field interval">
 		<div class="heading">
-			<label for="{{ name }}-every">Repeat Every</label>
+			<label for="{{ handle }}-interval">Repeat Every</label>
 		</div>
 		{{ forms.select({
-			name: name~'[every]',
-			id: 'repeat-every',
-			value: ( every is defined ? every : 1 ),
+			name: handle~'[interval]',
+			id: 'repeat-interval',
+			value: ( interval is defined ? interval : 1 ),
 			options: {
 				1: 1,
 				2: 2,
@@ -128,13 +127,13 @@
 		}) }}
 		<span class='repeat-every-unit'>days</span>
 	</div>
-	<div class="field on">
+	<div class="field weekdays">
 		<div class="heading">
-			<label for="{{ name }}-on">Repeat On</label>
+			<label for="{{ handle }}-weekdays">Repeat On</label>
 		</div>
 		{{ forms.checkboxGroup({
-			name: name~'[on]',
-			values: (on is defined ? on : null),
+			name: handle~'[weekdays]',
+			values: (weekdays is defined ? weekdays : null),
 			options: {
 				'SU' : 'Sunday',
 				'MO' : 'Monday',
@@ -146,13 +145,13 @@
 			}
 		}) }}
 	</div>
-	<div class="field by">
+	<div class="field repeat_by">
 		<div class="heading">
-			<label for="{{ name }}-by">Repeat By</label>
+			<label for="{{ handle }}-repeat_by">Repeat By</label>
 		</div>
 		{{ forms.radioGroup({
-			name: name~'[by]',
-			value: (by is defined and by is not null ? by : 'month'),
+			name: handle~'[repeat_by]',
+			value: (repeat_by is defined and repeat_by is not null ? repeat_by : 'month'),
 			options: {
 				'month' : 'Day of Month',
 				'week' : 'Day of Week',
@@ -161,14 +160,13 @@
 	</div>
 	<div class="field ends">
 		<div class="heading">
-			<label for="{{ name }}-ends">Repeat Ends</label>
+			<label for="{{ handle }}-ends">Repeat Ends</label>
 		</div>
 		{{ forms.select({
-			id: name~'repeat-ends',
-			name: name~'[ends]',
-			value: (ends is defined ? ends : 'never'),
+			id: handle~'repeat-ends',
+			name: handle~'[ends]',
+			value: (ends is defined ? ends : 'after'),
 			options: {
-				'never': 'Never',
 				'after': 'After',
 				'until': 'Until',
 			}
@@ -180,8 +178,8 @@
 				<label for="occurrences">Number of Occurrences</label>
 			</div>
 			{{ forms.text({ 
-				name: name~'[occurrences]', 
-				value: ( occurrences is defined ? occurrences : null ), 
+				name: handle~'[count]', 
+				value: ( count is defined ? count : 5 ), 
 				size: '20px', 
 				maxlength: '5'
 			}) }}
@@ -191,16 +189,21 @@
 		<div class='field until'>
 			
 			<div class='heading'>
-				<label for="untildate">Repeat End Date</label>
+				<label for="until">Repeat End Date</label>
 			</div>
 			{{ forms.date({
-				name: name~'[untildate]',
-				id: name~'untildate',
-				value: ( untildate is defined ? untildate : null )
+				name: handle~'[until]',
+				id: handle~'until',
+				value: ( until is defined ? until : null )
 			}) }}
 
 		</div>
-
 	</div>
-
 </div>
+
+{% set rangeSliderFieldJs %}
+	$(function() { window.advancedDate.create('{{ namespaceId }}'); });
+{% endset %}
+{% includeJs rangeSliderFieldJs %}
+
+{% includeJsResource "recurringdate/js/advanceddate.js" %}

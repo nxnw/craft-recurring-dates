@@ -1,9 +1,5 @@
 {
-	"autoload": {
-        "psr-0": { "RecurringDate" : "libraries/" }
-    },
     "require": {
-        "mynameiszanders/when": "dev-master",
         "simshaun/recurr": "dev-master"
     }
 }

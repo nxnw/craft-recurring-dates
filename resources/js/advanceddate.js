@@ -16,11 +16,20 @@ window.advancedDate = function(id) {
 
       var startTime = _root.find('.field.starttime .starttime-time');
       var endTime = _root.find('.field.endtime .endtime-time');
-      var alldaySwitch = _root.find('.allday-switch .lightswitch').data('lightswitch');
+      var alldaySwitch = _root.find('.allday-switch .lightswitch');
+      var alldaySwitchData;
+
+      if(!alldaySwitch.data('lightswitch')){
+        alldaySwitch.lightswitch();
+        alldaySwitchData = alldaySwitch.data('lightswitch');
+      }
+      else{
+        alldaySwitchData = alldaySwitch.data('lightswitch');
+      }
 
       var changeHandler = function() {
 
-        if (alldaySwitch.on) {
+        if (alldaySwitchData.on) {
 
           startTime.hide();
           endTime.hide();
@@ -33,7 +42,7 @@ window.advancedDate = function(id) {
 
       };
 
-      alldaySwitch.settings.onChange = changeHandler;
+      alldaySwitchData.settings.onChange = changeHandler;
       changeHandler();
 
 
@@ -42,11 +51,20 @@ window.advancedDate = function(id) {
     var _repeatToggle = function() {
 
       var repeatHolder = _root.find('.repeat-holder');
-      var repeatsSwitch = _root.find('.repeats-switch .lightswitch').data('lightswitch');
+      var repeatsSwitch = _root.find('.repeats-switch .lightswitch');
+      var repeatsSwitchData;
+
+      if(!repeatsSwitch.data('lightswitch')){
+        repeatsSwitch.lightswitch();
+        repeatsSwitchData = repeatsSwitch.data('lightswitch');
+      }
+      else{
+        repeatsSwitchData = repeatsSwitch.data('lightswitch');
+      }
 
       var changeHandler = function() {
 
-        if (repeatsSwitch.on) {
+        if (repeatsSwitchData.on) {
           repeatHolder.show();
         } else {
           repeatHolder.hide();
@@ -54,17 +72,17 @@ window.advancedDate = function(id) {
 
       };
 
-      repeatsSwitch.settings.onChange = changeHandler;
+      repeatsSwitchData.settings.onChange = changeHandler;
       changeHandler();
 
     };
 
     var _repeatInterval = function() {
 
-      var repeatSelect = _root.find('#' + _namespace + 'repeat-interval');
+      var repeatSelect = _root.find('#' + _namespace + 'repeat-frequency');
 
-      var repeatOn = _root.find('.field.on');
-      var repeatBy = _root.find('.field.by');
+      var repeatOn = _root.find('.field.weekdays');
+      var repeatBy = _root.find('.field.repeat_by');
 
       var repeatEveryUnit = _root.find('.repeat-every-unit');
 

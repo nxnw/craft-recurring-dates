@@ -5,6 +5,16 @@ require('vendor/autoload.php');
 
 class RecurringDatePlugin extends BasePlugin
 {
+
+	public function init()
+	{
+		parent::init();
+    	
+		craft()->on('content.onSaveContent', function(Event $event) {
+			craft()->recurringDate->contentSaved($event->params['content'], $event->params['isNewContent']);
+		});
+	}
+
 	function getName()
 	{
 		return Craft::t('Recurring Dates');
@@ -12,7 +22,7 @@ class RecurringDatePlugin extends BasePlugin
 
 	function getVersion()
 	{
-		return '0.2';
+		return '0.3';
 	}
 
 	function getDeveloper()
