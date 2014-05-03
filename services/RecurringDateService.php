@@ -277,12 +277,27 @@ class RecurringDateService extends BaseApplicationComponent
 	// WHERE handle='eventDate'
 	// ORDER BY start, start_time DESC
 
-    public function getDates($handle, $limit, $order, $groupBy){
+    // public function getCriteria($attributes = null){
+
+    // }
+
+    public function getDates($handle, $limit, $order, $groupBy, $before, $after){
+
     	$query = craft()->db->createCommand()
     		->select('r.elementId, d.start, d.end, r.end_time, r.start_time, r.allday, r.repeats, r.rrule')
     		->from('recurringdate_dates d')
     		->leftJoin('recurringdate_rules r', 'd.ruleId = r.id')
     		->where('handle=:handle', array(':handle'=>$handle));
+
+    	if( !is_null($before) ){
+    		$beforeValue = date('Y-m-d H:i:s', strtotime($before));
+    		$query->andWhere(':before > d.start', array(':before'=>$beforeValue));
+    	}
+
+    	if( !is_null($after) ){
+    		$afterValue = date('Y-m-d H:i:s', strtotime($after));
+    		$query->andWhere(':after <= d.start', array(':after'=>$afterValue));
+    	}
 
     	if($order == 'ASC'){
     		$query->order(array('start ASC', 'start_time ASC'));
@@ -290,6 +305,7 @@ class RecurringDateService extends BaseApplicationComponent
     	else{
     		$query->order(array('start DESC', 'start_time DESC'));
     	}
+
 
 
     	if( !is_null($limit) ){
@@ -309,7 +325,7 @@ class RecurringDateService extends BaseApplicationComponent
     		);
     	}
 
-    	if( $groupBy ){
+    	if( !is_null($groupBy) ){
     		if( $groupBy == 'day' ){
     			$eventsFinal = $this->groupBy($eventsFinal, 'n/j/Y');
     		}
