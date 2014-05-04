@@ -69,9 +69,8 @@ The Group query will return a different structure than a regular query. It's str
 
 ####Example Output Usage - Single Entry
 ```
-  {% for date in entry.advanced_date_field_name.dates %}
-	  {{ date.start_date|date("n/j/Y H:i:s") }}{{ date.end_date is defined ? ' -- ' ~ date.end_date|date("n/j/Y H:i:s") }}<br>
-  {% endfor %}
+  {% set date = entry.advanced_date_field_name %}
+  {{ date.start_date|date("n/j/Y H:i:s") }}{{ date.end_date is defined ? ' -- ' ~ date.end_date|date("n/j/Y H:i:s") }}
 ```
 
 ####Properties available for output for each Advanced Date Field - Single Entry
