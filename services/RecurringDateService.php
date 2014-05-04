@@ -281,7 +281,7 @@ class RecurringDateService extends BaseApplicationComponent
 
     // }
 
-    public function getDates($handle, $limit, $order, $groupBy, $before, $after){
+    public function getDates($handle, $limit, $order, $groupBy, $before, $after, $criteria){
 
     	$query = craft()->db->createCommand()
     		->select('r.elementId, d.start, d.end, r.end_time, r.start_time, r.allday, r.repeats, r.rrule')
@@ -319,10 +319,22 @@ class RecurringDateService extends BaseApplicationComponent
 
     	foreach ($events as $index => $value) {
     		$id = $value['elementId'];
-    		$eventsFinal[] = array(
-    			'date' => $value,
-    			'entry' => craft()->entries->getEntryById($id),
-    		);
+    		if( !is_null($criteria) ){
+	    		foreach ($criteria as $index => $entry) {
+	    			if( $id == $entry->id ){
+			    		$eventsFinal[] = array(
+			    			'date' => $value,
+			    			'entry' => craft()->entries->getEntryById($id),
+			    		);
+			    	}
+	    		}
+	    	}
+	    	else{
+	    		$eventsFinal[] = array(
+	    			'date' => $value,
+	    			'entry' => craft()->entries->getEntryById($id),
+	    		);
+	    	}
     	}
 
     	if( !is_null($groupBy) ){
