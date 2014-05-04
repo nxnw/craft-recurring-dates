@@ -21,20 +21,22 @@ This is a plugin for the Craft CMS to add recurring dates functionality. It adds
 ####Example Output Usage - Multiple Dates Query
 
 ```
-{% set events = craft.recurringdate.dates('yourFieldHandle', 3, 'ASC', null, '12/22/2014', 'now +1 months') %}
+{% set query = craft.entries.section('events').relatedTo(craft.categories.slug('your-slug')) %}
+{% set events = craft.recurringdate.dates('yourFieldHandle', 3, 'ASC', null, '12/22/2014', 'now +1 months', query) %}
 
 {% for event in events %}
 	  {{ event.date.start|date("n/j/Y") }}{{ event.date.end ? ' -- ' ~ event.date.end|date("n/j/Y") }}<br>
 {% endfor %}
 ```
 
-####Arguments for `craft.recurringdate.dates`
+####Arguments for `craft.recurringdate.dates` in order - Still looking into a better query syntax
 * Field Handle - Handle of your field in the Craft CP
 * Limit - limit the number of entries returned
 * Order - 'ASC' or 'DESC' - defaults to 'ASC'
 * Group - null, 'day', 'month', or 'year' - See Grouping Info Below
-* Before - Date string accepted by PHP's [strtotime function](http://www.php.net/manual/en/datetime.formats.php)
-* After - Date string accepted by PHP's strtotime function 
+* Before - null, or Date string accepted by PHP's [strtotime function](http://www.php.net/manual/en/datetime.formats.php)
+* After - null, or Date string accepted by PHP's strtotime function 
+* Entry Query - ElementCriteriaModel returned by a craft entry query 
 
 ####Properties available for output for Multiple Dates Query
 * `date` - Array containing all the date info for the recurring date
