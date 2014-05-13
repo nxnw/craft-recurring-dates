@@ -281,10 +281,20 @@ class RecurringDateService extends BaseApplicationComponent
 
     // }
 
+    public function getDate($id){
+    	$query = craft()->db->createCommand()
+    		->select('d.id, r.elementId, d.start start_date, d.start start, d.end end_date, d.end end, r.end_time, r.start_time, r.allday, r.repeats, r.rrule')
+    		->from('recurringdate_dates d')
+    		->leftJoin('recurringdate_rules r', 'd.ruleId = r.id')
+    		->where('d.id=:id', array(':id'=>$id));
+
+    	return $query->queryRow();
+    }
+
     public function getDates($handle, $limit, $order, $groupBy, $before, $after, $criteria){
 
     	$query = craft()->db->createCommand()
-    		->select('r.elementId, d.start, d.end, r.end_time, r.start_time, r.allday, r.repeats, r.rrule')
+    		->select('d.id, r.elementId, d.start start_date, d.start start, d.end end_date, d.end end, r.end_time, r.start_time, r.allday, r.repeats, r.rrule')
     		->from('recurringdate_dates d')
     		->leftJoin('recurringdate_rules r', 'd.ruleId = r.id')
     		->where('handle=:handle', array(':handle'=>$handle));
