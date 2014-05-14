@@ -40,6 +40,7 @@ This is a plugin for the Craft CMS to add recurring dates functionality. It adds
 
 ####Properties available for output for Multiple Dates Query
 * `date` - Array containing all the date info for the recurring date
+  * `id` - Id of the date, used to query the correct date in a sequence
   * `elementId` - Id of the Craft entry associated with this date 
   * `start` - A string containing the start date
   * `end` - A string containing the end date, if set
@@ -66,6 +67,19 @@ The Group query will return a different structure than a regular query. It's str
 	    ...
   )
 ```
+
+####Example Output Usage - Single Date Query using Date ID
+```
+ {% set row = craft.recurringdate.date(id) %}
+ {% set date = row.date %}
+ {% set entry = row.entry %}
+ {{ entry.title }}<br>
+ {{ date.start_date|date("n/j/Y H:i:s") }}{{ date.end_date is defined ? ' -- ' ~ date.end_date|date("n/j/Y H:i:s") }}
+```
+
+####Properties available for output for Single Date Query
+The Single Date Query will only return one array that contains the `date` and the `entry` of the row with the specified ID. The idea is that you would use the multiple date query to list the date's ID and then you can select which specific date you want to display based on that ID. 
+
 
 ####Example Output Usage - Single Entry
 ```
