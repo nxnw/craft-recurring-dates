@@ -45,9 +45,9 @@ This is a plugin for the Craft CMS to add recurring dates functionality. It adds
   * `start` - A string containing the start date
   * `end` - A string containing the end date, if set
   * `start_time` - A string containing the start time, if set
-  * `end_time - A string containing the end time, if set
+  * `end_time` - A string containing the end time, if set
   * `allday` - If the date lasts all day
-  * `repeats - If the date repeats
+  * `repeats` - If the date repeats
   * `rrule` - The RRULE string used to build the date
 * `entry` - The entry associated with this date
 
