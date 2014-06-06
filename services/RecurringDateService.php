@@ -9,7 +9,7 @@ class RecurringDateService extends BaseApplicationComponent
 	public $content;
 	public $isNewContent;
 
-	// Retrieves address from 3rd party table
+	// Retrieves record from 3rd party db table
     public function getRule(BaseFieldType $fieldType)
     {
         // Load record (if exists)
@@ -188,6 +188,19 @@ class RecurringDateService extends BaseApplicationComponent
 		$attr['start_time'] = ( !empty($attr['start_time']['time']) ? date('H:i:s', strtotime($attr['start_time']['time'])) : null );
 		$attr['end_time'] = ( !empty($attr['end_time']['time']) ? date('H:i:s', strtotime($attr['end_time']['time'])) : null );
 
+
+		if( isset($attr['exdates']) ){
+			$rawExDates = $attr['exdates'];
+			$attr['exdates'] = array();
+
+			foreach ($rawExDates as $index => $exdate) {
+				$attr['exdates'][] = !empty($exdate['date']) ? strtotime($exdate['date']) : null;
+			}
+		}
+		else{
+			$attr['exdates'] = array();
+		}
+
 		if (!isset($attr['allday'])) 	{ $attr['allday'] =null; }
 		if (!isset($attr['repeats'])) 	{ $attr['repeats'] =null; }
 		if (!isset($attr['frequency'])) { $attr['frequency'] =null; }
@@ -244,6 +257,7 @@ class RecurringDateService extends BaseApplicationComponent
 				$startDateString = $date->format('Ymd\THis');
 				$endDateString = $end->format('Ymd\THis');
 				
+	    		
 				$datesValues['start'] = DateTime::createFromFormat('Ymd\THis', $startDateString, craft()->getTimeZone());
 
 				if( !empty($end) ){
@@ -329,21 +343,25 @@ class RecurringDateService extends BaseApplicationComponent
 
     	foreach ($events as $index => $value) {
     		$id = $value['elementId'];
-    		if( !is_null($criteria) ){
-	    		foreach ($criteria as $index => $entry) {
-	    			if( $id == $entry->id ){
-			    		$eventsFinal[] = array(
-			    			'date' => $value,
-			    			'entry' => craft()->entries->getEntryById($id),
-			    		);
-			    	}
-	    		}
-	    	}
-	    	else{
-	    		$eventsFinal[] = array(
-	    			'date' => $value,
-	    			'entry' => craft()->entries->getEntryById($id),
-	    		);
+    		$exdates = $this->getExdates($value['rrule']);
+
+    		if( !in_array(date('Ymd', strtotime($value['start'])), $exdates) ){
+	    		if( !is_null($criteria) ){
+		    		foreach ($criteria as $index => $entry) {
+		    			if( $id == $entry->id ){
+				    		$eventsFinal[] = array(
+				    			'date' => $value,
+				    			'entry' => craft()->entries->getEntryById($id),
+				    		);
+				    	}
+		    		}
+		    	}
+		    	else{
+		    		$eventsFinal[] = array(
+		    			'date' => $value,
+		    			'entry' => craft()->entries->getEntryById($id),
+		    		);
+		    	}
 	    	}
     	}
 
@@ -360,6 +378,25 @@ class RecurringDateService extends BaseApplicationComponent
     	}
 
     	return $eventsFinal;
+    }
+
+    private function getExdates($rrule){
+    	if( strpos($rrule, 'EXDATE') !== false ){
+            $exdates = array();
+
+            $exDatesArray = explode('EXDATE=', $rrule);
+            $exDatesString = $exDatesArray[1];
+            $exDatesString = rtrim($exDatesString, ";");
+            $exDatesArray = explode(',', $exDatesString);
+            
+            foreach ($exDatesArray as $index => $date) {
+            	$exdates[] = date('Ymd', strtotime($date));
+            }
+        }
+        else{
+        	$exdates = array();
+        }
+        return $exdates;
     }
 
     private function groupBy($events, $groupString){
@@ -398,6 +435,7 @@ class RecurringDateService extends BaseApplicationComponent
 		$ends 		= $settings['ends']; //how it ends (never, after, until)
 		$count 		= $settings['count']; // if ending occurs amounts
 		$untilDate 	= $settings['until']['date']; // if ending until date
+		$exDates 	= $settings['exdates'];
 
 		$dbString = '';
 
@@ -454,8 +492,20 @@ class RecurringDateService extends BaseApplicationComponent
 				$dbString .= 'DTSTART=' . $time . ';' . $rule->getString();
 			}
 			else{
-				$time = strtotime($startDate);
+				$time = $startDate;
+				var_dump($startDate);
 				$dbString .= 'DTSTART=' . date('Ymd', $time) . ';' . $rule->getString();
+			}
+
+			if( count($exDates) > 0 ){
+				$dbString .= ';EXDATE=';
+				foreach ($exDates as $index => $date) {
+					$dbString .= date('Ymd', $date);
+					if( $date !== end($exDates) ){
+						$dbString .= ',';
+					}
+				}
+				$dbString .= ';';
 			}
 		}
 		else{

@@ -37,6 +37,23 @@ class RecurringDate_AdvancedDateFieldType extends BaseFieldType
 		}
 
 		$attr = $ruleModel->getAttributes();
+
+		if( strpos($attr['rrule'], 'EXDATE') !== false ){
+            $attr['exdates'] = array();
+
+            $exDatesArray = explode('EXDATE=', $attr['rrule']);
+            $exDatesString = $exDatesArray[1];
+            $exDatesString = rtrim($exDatesString, ";");
+            $exDatesArray = explode(',', $exDatesString);
+            
+            foreach ($exDatesArray as $index => $date) {
+            	$attr['exdates'][] = DateTime::createFromFormat('Ymd', $date);
+            }
+        }
+        else{
+        	$attr['exdates'] = array();
+        }
+		
 		$attr['namespaceId'] = $namespaceId;
 
 		return craft()->templates->render('recurringdate/fields', $attr);

@@ -10,6 +10,7 @@ window.advancedDate = function(id) {
       _repeatToggle();
       _repeatInterval();
       _repeatEnds();
+      _repeatNewDate();
     };
 
     var _allDayToggle = function() {
@@ -149,6 +150,56 @@ window.advancedDate = function(id) {
       repeatEndsSelect.trigger('change');
 
     };
+
+    var _repeatNewDate = function() {
+      var repeatDateButton = _root.find('#' + _namespace + 'date-add');
+
+      var clickHandler = function() {
+        var repeatDateDiv = _root.find('.field.exdates > .padding:last');
+
+        var newRepeatDate = repeatDateDiv.clone();
+        var newRepeatDateInput = newRepeatDate.find('input');
+        var newRepeatDateDelete = newRepeatDate.find('a');
+
+        if( newRepeatDateDelete.length == 0 ){
+          newRepeatDate.append('<a style="padding-left: 5px;" class="delete icon" title="Delete"></a>');
+          newRepeatDateDelete = newRepeatDate.find('a');
+        }
+
+        indexPos1 = newRepeatDateInput.attr('id').indexOf('exdates') + 7;
+        indexPos2 = newRepeatDateInput.attr('id').indexOf('-date');
+        newDateIndex = newRepeatDateInput.attr('id').substring(indexPos1, indexPos2);
+        index = parseInt(newDateIndex) + 1;
+
+        handlePos1 = newRepeatDateInput.attr('id').indexOf('fields-') + 7;
+        handlePos2 = newRepeatDateInput.attr('id').indexOf('exdates');
+        handle = newRepeatDateInput.attr('id').substring(handlePos1, handlePos2);
+        
+        newRepeatDateInput.attr('class', 'text');
+        newRepeatDateInput.attr('id', 'fields-'+handle+'exdates'+index+'-date');
+        newRepeatDateInput.attr('name', 'fields['+handle+'][exdates][][date]');
+        newRepeatDateInput.val("");
+        
+        newRepeatDate.insertAfter(repeatDateDiv);
+        newRepeatDate.show();
+        
+        newRepeatDateInput.datepicker({
+          constrainInput: false,
+          dateFormat: 'm/d/yy',
+          defaultDate: new Date(),
+          prevText:   'Prev',
+          nextText:   'Next',
+        });
+
+        var deleteClickHandler = function(){
+          newRepeatDate.fadeOut(300, function(){ newRepeatDate.remove(); });
+        };
+
+        newRepeatDateDelete.on('click', deleteClickHandler);
+      };
+
+      repeatDateButton.on('click', clickHandler);
+    }
 
     _init();
 

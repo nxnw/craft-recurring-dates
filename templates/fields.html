@@ -198,6 +198,33 @@
 			}) }}
 
 		</div>
+
+		<div class="field exdates">
+			<div class='heading'>
+				<label for="exdates">Excluded Dates</label>
+			</div>
+			<div class="padding" style="padding-bottom: 5px; display: none;">
+			{{ forms.date({
+				name: handle~'[exdates-temp]',
+				id: handle~'exdates0',
+				value: ''
+			}) }}<a style="padding-left: 5px;" class="delete icon" title="Delete" onclick="$(this).fadeOut(300, function(){ $(this).parent().remove(); });"></a>
+			</div>
+			{% for date in exdates %}
+				<div class="padding" style="padding-bottom: 5px;">
+				{{ forms.date({
+					name: handle~'[exdates][]',
+					id: handle~'exdates'~loop.index,
+					value: (date is defined ? date : null)
+				}) }}<a style="padding-left: 5px;" class="delete icon" title="Delete" onclick="$(this).fadeOut(300, function(){ $(this).parent().remove(); });"></a>
+				</div>
+			{% endfor %}
+			<div class="buttons">
+				<div class="btngroup">
+					<div id="{{ handle }}date-add" class="btn add icon">{{ "Excluded Date"|t }}</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
