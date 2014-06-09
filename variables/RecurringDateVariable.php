@@ -3,8 +3,8 @@ namespace Craft;
 
 class RecurringDateVariable
 {
-	public function dates($handle, $limit = null, $order = 'ASC', $groupBy = null, $before = null, $after = null, $criteria = null){
-		return craft()->recurringDate->getDates($handle, $limit, $order, $groupBy, $before, $after, $criteria);
+	public function dates($handle, $limit = null, $order = 'ASC', $groupBy = null, $before = null, $after = null, $criteria = null, $excludes = true){
+		return craft()->recurringDate->getDates($handle, $limit, $order, $groupBy, $before, $after, $criteria, $excludes);
 	}
 
 	public function date($id) {

@@ -305,7 +305,7 @@ class RecurringDateService extends BaseApplicationComponent
     	return $query->queryRow();
     }
 
-    public function getDates($handle, $limit, $order, $groupBy, $before, $after, $criteria){
+    public function getDates($handle, $limit, $order, $groupBy, $before, $after, $criteria, $excludes){
 
     	$query = craft()->db->createCommand()
     		->select('d.id, r.elementId, d.start start_date, d.start start, d.end end_date, d.end end, r.end_time, r.start_time, r.allday, r.repeats, r.rrule')
@@ -330,11 +330,9 @@ class RecurringDateService extends BaseApplicationComponent
     		$query->order(array('start DESC', 'start_time DESC'));
     	}
 
-
-
-    	if( !is_null($limit) ){
-    		$query->limit($limit);
-    	}
+    	// if( !is_null($limit) ){
+    	// 	$query->limit($limit);
+    	// }
 
     	
     	$events = $query->queryAll();
@@ -344,25 +342,48 @@ class RecurringDateService extends BaseApplicationComponent
     	foreach ($events as $index => $value) {
     		$id = $value['elementId'];
     		$exdates = $this->getExdates($value['rrule']);
+    		if( $excludes ){
+	    		if( !in_array(date('Ymd', strtotime($value['start'])), $exdates) ){
+		    		if( !is_null($criteria) ){
+			    		foreach ($criteria as $index => $entry) {
+			    			if( $id == $entry->id ){
+					    		$eventsFinal[] = array(
+					    			'date' => $value,
+					    			'entry' => craft()->entries->getEntryById($id),
+					    		);
+					    	}
+			    		}
+			    	}
+			    	else{
+			    		$eventsFinal[] = array(
+			    			'date' => $value,
+			    			'entry' => craft()->entries->getEntryById($id),
+			    		);
+			    	}
+		    	}
+		    }
+		    else{
+		    	if( !is_null($criteria) ){
+			    		foreach ($criteria as $index => $entry) {
+			    			if( $id == $entry->id ){
+					    		$eventsFinal[] = array(
+					    			'date' => $value,
+					    			'entry' => craft()->entries->getEntryById($id),
+					    		);
+					    	}
+			    		}
+			    	}
+			    	else{
+			    		$eventsFinal[] = array(
+			    			'date' => $value,
+			    			'entry' => craft()->entries->getEntryById($id),
+			    		);
+			    	}
+		    }
+    	}
 
-    		if( !in_array(date('Ymd', strtotime($value['start'])), $exdates) ){
-	    		if( !is_null($criteria) ){
-		    		foreach ($criteria as $index => $entry) {
-		    			if( $id == $entry->id ){
-				    		$eventsFinal[] = array(
-				    			'date' => $value,
-				    			'entry' => craft()->entries->getEntryById($id),
-				    		);
-				    	}
-		    		}
-		    	}
-		    	else{
-		    		$eventsFinal[] = array(
-		    			'date' => $value,
-		    			'entry' => craft()->entries->getEntryById($id),
-		    		);
-		    	}
-	    	}
+    	if( !is_null($limit) ){
+    		$eventsFinal = array_slice($eventsFinal, 0, $limit);
     	}
 
     	if( !is_null($groupBy) ){
@@ -434,7 +455,7 @@ class RecurringDateService extends BaseApplicationComponent
 		$repeatBy 	= $settings['repeat_by']; //Monthly, by day of week, or day of month
 		$ends 		= $settings['ends']; //how it ends (never, after, until)
 		$count 		= $settings['count']; // if ending occurs amounts
-		$untilDate 	= $settings['until']['date']; // if ending until date
+		$untilDate 	= $settings['until']; // if ending until date
 		$exDates 	= $settings['exdates'];
 
 		$dbString = '';
