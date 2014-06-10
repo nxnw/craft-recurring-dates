@@ -313,15 +313,27 @@ class RecurringDateService extends BaseApplicationComponent
     		->leftJoin('recurringdate_rules r', 'd.ruleId = r.id')
     		->where('handle=:handle', array(':handle'=>$handle));
 
+	    
     	if( !is_null($before) ){
     		$beforeValue = date('Y-m-d H:i:s', strtotime($before));
-    		$query->andWhere(':before > d.start', array(':before'=>$beforeValue));
+    		$query->andWhere(':before >= d.start', array(':before'=>$beforeValue));
     	}
 
     	if( !is_null($after) ){
     		$afterValue = date('Y-m-d H:i:s', strtotime($after));
     		$query->andWhere(':after <= d.start', array(':after'=>$afterValue));
     	}
+
+    	if( !is_null($criteria) ){
+    		$critArr = [];
+	    	foreach ($criteria as $index => $entry) {
+	    		$critArr[] = $entry->id;
+	    	}
+
+	    	$critIds = implode(',', $critArr);
+
+	    	$query->andWhere('r.elementId IN (:ids)', array(':ids'=>$critIds));
+	    }
 
     	if($order == 'ASC'){
     		$query->order(array('start ASC', 'start_time ASC'));
@@ -330,9 +342,10 @@ class RecurringDateService extends BaseApplicationComponent
     		$query->order(array('start DESC', 'start_time DESC'));
     	}
 
-    	// if( !is_null($limit) ){
-    	// 	$query->limit($limit);
-    	// }
+
+    	if( !is_null($limit) ){
+    		$query->limit($limit * 2);
+    	}
 
     	
     	$events = $query->queryAll();
@@ -341,44 +354,20 @@ class RecurringDateService extends BaseApplicationComponent
 
     	foreach ($events as $index => $value) {
     		$id = $value['elementId'];
-    		$exdates = $this->getExdates($value['rrule']);
     		if( $excludes ){
+    			$exdates = $this->getExdates($value['rrule']);
 	    		if( !in_array(date('Ymd', strtotime($value['start'])), $exdates) ){
-		    		if( !is_null($criteria) ){
-			    		foreach ($criteria as $index => $entry) {
-			    			if( $id == $entry->id ){
-					    		$eventsFinal[] = array(
-					    			'date' => $value,
-					    			'entry' => craft()->entries->getEntryById($id),
-					    		);
-					    	}
-			    		}
-			    	}
-			    	else{
-			    		$eventsFinal[] = array(
-			    			'date' => $value,
-			    			'entry' => craft()->entries->getEntryById($id),
-			    		);
-			    	}
+		    		$eventsFinal[] = array(
+		    			'date' => $value,
+		    			'entry' => craft()->entries->getEntryById($id),
+		    		);
 		    	}
 		    }
 		    else{
-		    	if( !is_null($criteria) ){
-			    		foreach ($criteria as $index => $entry) {
-			    			if( $id == $entry->id ){
-					    		$eventsFinal[] = array(
-					    			'date' => $value,
-					    			'entry' => craft()->entries->getEntryById($id),
-					    		);
-					    	}
-			    		}
-			    	}
-			    	else{
-			    		$eventsFinal[] = array(
-			    			'date' => $value,
-			    			'entry' => craft()->entries->getEntryById($id),
-			    		);
-			    	}
+		    	$eventsFinal[] = array(
+	    			'date' => $value,
+	    			'entry' => craft()->entries->getEntryById($id),
+	    		);
 		    }
     	}
 
