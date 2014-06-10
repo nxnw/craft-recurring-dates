@@ -40,13 +40,13 @@ This is a plugin for the Craft CMS to add recurring dates functionality. It adds
 * Field Handle - Handle of your field in the Craft CP
 
 Values in the options array - see above example for usage
-* 'limit' - limit the number of entries returned
-* 'order' - 'ASC' or 'DESC' - defaults to 'ASC'
-* 'group' - null, 'day', 'month', or 'year' - See Grouping Info Below
-* 'before' - null, or Date string accepted by PHP's [strtotime function](http://www.php.net/manual/en/datetime.formats.php)
-* 'after' - null, or Date string accepted by PHP's strtotime function 
-* 'criteria' - ElementCriteriaModel returned by a craft entry query
-* 'excludes' - if excluded dates should be respected - defaults to true
+* `limit` - limit the number of entries returned
+* `order` - 'ASC' or 'DESC' - defaults to 'ASC'
+* `group` - null, 'day', 'month', or 'year' - See Grouping Info Below
+* `before` - null, or Date string accepted by PHP's [strtotime function](http://www.php.net/manual/en/datetime.formats.php)
+* `after` - null, or Date string accepted by PHP's strtotime function 
+* `criteria` - ElementCriteriaModel returned by a craft entry query
+* `excludes` - if excluded dates should be respected - defaults to true
 
 ####Properties available for output for Multiple Dates Query
 * `date` - Array containing all the date info for the recurring date
