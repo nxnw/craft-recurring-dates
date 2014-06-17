@@ -325,7 +325,7 @@ class RecurringDateService extends BaseApplicationComponent
     	}
 
     	if( !is_null($criteria) ){
-    		$critArr = [];
+    		$critArr = array();
 	    	foreach ($criteria as $index => $entry) {
 	    		$critArr[] = $entry->id;
 	    	}
